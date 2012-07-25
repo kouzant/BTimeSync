@@ -1,8 +1,14 @@
 package time;
 
+import java.io.IOException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 
-public class Operations {
+public class Operations implements TimeOper{
 	public Calendar getTime(){
 		Calendar now = Calendar.getInstance();
 		
@@ -21,14 +27,24 @@ public class Operations {
 		
 		return now;
 	}
+	
 	public static void main(String[] args){
-		int amount = 0;
-		if (args.length > 0)
-			amount = Integer.parseInt(args[0]);
-		Operations oper = new Operations();
-		System.out.print("Current time: ");
-		oper.printTime(oper.getTime());
-		System.out.print("Wrong time: ");
-		oper.printTime(oper.appendError(oper.getTime(), amount));
+		try{
+			Operations oper = new Operations();
+			//Create stub
+			TimeOper timeStub = (TimeOper) UnicastRemoteObject.exportObject(oper, 6789);
+			//Bind stub in the registry
+			Runtime.getRuntime().exec("rmiregistry 2020");
+			LocateRegistry.createRegistry(2020);
+			Registry reg = LocateRegistry.getRegistry(2020);
+			reg.bind("TimeOper", timeStub);
+			System.out.println("Server is up!");
+		}catch(RemoteException e){
+			e.printStackTrace();
+		}catch(AlreadyBoundException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 }
