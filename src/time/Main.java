@@ -6,6 +6,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import network.NetOper;
+import network.NetOperInt;
+
 import election.Nodes;
 import election.Variables;
 import election.Utils;
@@ -22,8 +25,9 @@ public class Main {
 		
 		//Parse configuration file
 		for (int i = 0; i < args.length; i++){
-			if (args.equals("-c")){
+			if (args[i].equals("-c")){
 				configFile = args[i + 1];
+				System.err.println("REACHED HERE!");
 			}
 		}
 		ConfigParser cp = new ConfigParser(configFile);
@@ -37,15 +41,18 @@ public class Main {
 		rmiPort = cp.rmiPort();
 		
 		try{
-			Operations oper = new Operations();
+			TimeOper oper = new TimeOper();
+			NetOper mess = new NetOper();
 			//First argument is the amount of the time error
 			oper.setAmount(amount);
 			//Create stub
-			TimeOper timeStub = (TimeOper) UnicastRemoteObject.exportObject(oper, 0);
+			TimeOperInt timeStub = (TimeOperInt) UnicastRemoteObject.exportObject(oper, 0);
+			NetOperInt netStub = (NetOperInt) UnicastRemoteObject.exportObject(mess, 0);
 			//Bind stub in the registry
 			LocateRegistry.createRegistry(rmiPort);
 			Registry reg = LocateRegistry.getRegistry(rmiPort);
 			reg.bind("TimeOper", timeStub);
+			reg.bind("NetOper", netStub);
 			System.out.println("Server is up!");
 		}catch(RemoteException e){
 			e.printStackTrace();

@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import network.NetOperInt;
+
 public class Client {
 
 	/**
@@ -31,18 +33,20 @@ public class Client {
 		System.out.println(host);
 		try{
 			Registry reg = LocateRegistry.getRegistry(host, rmiPort);
-			TimeOper timeStub = (TimeOper) reg.lookup("TimeOper");
+			TimeOperInt timeStub = (TimeOperInt) reg.lookup("TimeOper");
+			NetOperInt netStub = (NetOperInt) reg.lookup("NetOper");
+			System.out.println(netStub.hello());
 			//Real time
 			System.out.print("Current time: ");
-			timeStub.printTime(timeStub.getTime());
+			System.out.println(timeStub.printTime(timeStub.getTime()));
 			//Wrong time
 			System.out.print("Wrong Time before fix: ");
-			timeStub.printWrongTime();
+			System.out.println(timeStub.printWrongTime());
 			//Wrong time after a fix
 			int fix = -3;
 			timeStub.fixErrorAmount(fix);
 			System.out.print("Wrong time after fix: ");
-			timeStub.printWrongTime();
+			System.out.println(timeStub.printWrongTime());
 		}catch (RemoteException e) {
 			e.printStackTrace();
 		}catch (NotBoundException e) {

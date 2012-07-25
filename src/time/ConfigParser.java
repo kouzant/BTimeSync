@@ -10,6 +10,7 @@ public class ConfigParser {
 
 	public ConfigParser(String filename){
 		try{
+			System.out.println(filename);
 			FileInputStream fis=new FileInputStream(filename);
 			properties.load(fis);
 		}catch(FileNotFoundException e0){

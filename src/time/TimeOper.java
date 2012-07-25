@@ -1,14 +1,40 @@
 package time;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.Calendar;
 
-public interface TimeOper extends Remote {
-	public void setAmount(int amount) throws RemoteException;
-	public Calendar getTime() throws RemoteException;
-	public void printTime(Calendar now) throws RemoteException;
-	public Calendar appendError(int amount) throws RemoteException;
-	public void printWrongTime() throws RemoteException;
-	public void fixErrorAmount(int fix) throws RemoteException;
+public class TimeOper implements TimeOperInt{
+	private int amount = 0;
+	
+	public void setAmount(int amount){
+		this.amount = amount;
+	}
+	public Calendar getTime(){
+		Calendar now = Calendar.getInstance();
+		
+		return now;
+	}
+	public String printTime(Calendar now){
+		StringBuilder time = new StringBuilder();
+		time.append(now.get(Calendar.HOUR_OF_DAY))
+		.append(":").append(now.get(Calendar.MINUTE))
+		.append(":").append(now.get(Calendar.SECOND)).append("\n");
+		
+		return time.toString();
+	}
+	public Calendar appendError(int amount){
+		Calendar now = getTime();
+		now.add(Calendar.SECOND, amount);
+		
+		return now;
+	}
+	public String printWrongTime(){
+		Calendar now = getTime();
+		now.add(Calendar.SECOND, amount);
+		String time = printTime(now);
+		
+		return time;
+	}
+	public void fixErrorAmount(int fix){
+		setAmount(amount + fix);
+	}
 }
