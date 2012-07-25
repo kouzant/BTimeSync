@@ -14,17 +14,21 @@ public class Utils {
 		
 		return randInt;
 	}
-	private String getSID(){
+	public String getIpAddr(){
 		InetAddress ip;
 		String ipAddr = "";
-		String sid = "";
 		try{
 			ip = InetAddress.getLocalHost();
 			ipAddr = ip.getHostAddress();
 		}catch(UnknownHostException e){
 			e.printStackTrace();
 		}
-		sid = ipAddr.concat(String.valueOf(genRanNum()));
+		
+		return ipAddr;
+	}
+	private String getSID(){
+		String ipAddr = getIpAddr();
+		String sid = ipAddr.concat(String.valueOf(genRanNum()));
 		
 		return sid;
 	}

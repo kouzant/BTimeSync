@@ -4,11 +4,15 @@ public class Variables {
 	private int participant;
 	private int leader;
 	private String uid;
+	private Nodes nextNode;
+	private Nodes curLeader;
 	
 	public Variables(){
 		participant = 0;
 		leader = 0;
 		uid = "";
+		nextNode = null;
+		curLeader = null;
 	}
 	
 	public void setParticipant(int participant){
@@ -28,5 +32,17 @@ public class Variables {
 	}
 	public String getUID(){
 		return uid;
+	}
+	public void setNextNode(Nodes nextNode){
+		this.nextNode = nextNode;
+	}
+	public Nodes getNextNode(){
+		return nextNode;
+	}
+	public void setCurLeader(Nodes curLeader){
+		this.curLeader = curLeader;
+	}
+	public Nodes getCurLeader(){
+		return curLeader;
 	}
 }

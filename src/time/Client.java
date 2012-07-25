@@ -12,10 +12,25 @@ public class Client {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String host = (args.length < 1) ? null : args[0];
+		String host = "";
+		int rmiPort = 2020;
+		//Parse command line arguments
+		for (int i = 0; i < args.length; i++){
+			if (args[i].equals("-h")){
+				host = args[i + 1];
+			}
+			if (args[i].equals("-p")){
+				rmiPort = Integer.parseInt(args[i + 1]);
+			}
+		}
+		if(host.equals("")){
+			System.err.println("You did not specified a host.");
+			System.exit(1);
+		}
+		
 		System.out.println(host);
 		try{
-			Registry reg = LocateRegistry.getRegistry(host, 2020);
+			Registry reg = LocateRegistry.getRegistry(host, rmiPort);
 			TimeOper timeStub = (TimeOper) reg.lookup("TimeOper");
 			//Real time
 			System.out.print("Current time: ");

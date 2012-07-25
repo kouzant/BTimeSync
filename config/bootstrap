@@ -1,0 +1,5 @@
+leader=1
+t_error=5
+rmiport=2020
+bootstrap=127.0.0.1
+b_port=2020
