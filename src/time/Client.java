@@ -35,7 +35,6 @@ public class Client {
 			Registry reg = LocateRegistry.getRegistry(host, rmiPort);
 			TimeOperInt timeStub = (TimeOperInt) reg.lookup("TimeOper");
 			NetOperInt netStub = (NetOperInt) reg.lookup("NetOper");
-			System.out.println(netStub.hello());
 			//Real time
 			System.out.print("Current time: ");
 			System.out.println(timeStub.printTime(timeStub.getTime()));

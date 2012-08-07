@@ -26,9 +26,8 @@ public class Main {
 		Utilities utils = new Utilities();
 		String configFile="config/client";
 		int amount = 0;
-		int rmiPort = 2020;
 		Variables.setUID(utils.getUID());
-		log.debug("UID: " + Variables.getUID());
+		log.info("UID: " + Variables.getUID());
 		
 		//Parse configuration file
 		for (int i = 0; i < args.length; i++){
@@ -37,20 +36,21 @@ public class Main {
 			}
 		}
 		ConfigParser cp = new ConfigParser(configFile);
+		Variables.setRmiPort(cp.rmiPort());
+		Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
+				Variables.getRmiPort());
+		log.debug("This node:"+thisNode);
 		if (cp.bootstrap().equals(" ")){
 		//Bootstrap node
 			log.debug("Bootstrap and Leader!");
-			Variables.setLeader(1);
-			Nodes curNode = new Nodes(utils.getIpAddr(), utils.getUID());
-			Variables.setCurLeader(curNode);
-			log.debug(Variables.getCurLeader());
+			Variables.setLeader(1);	
+			Variables.setCurLeader(thisNode);
 		}else{
 			log.debug("Not a leader!");
 			Variables.setLeader(0);
 		}
 		Variables.setParticipant(0);
 		amount = cp.timeError();
-		rmiPort = cp.rmiPort();
 		
 		//Prepare RMI
 		try{
@@ -67,8 +67,8 @@ public class Main {
 			ProceduresInt procStub = (ProceduresInt) UnicastRemoteObject.
 					exportObject(elProc, 0);
 			//Bind stub in the registry
-			LocateRegistry.createRegistry(rmiPort);
-			Registry reg = LocateRegistry.getRegistry(rmiPort);
+			LocateRegistry.createRegistry(Variables.getRmiPort());
+			Registry reg = LocateRegistry.getRegistry(Variables.getRmiPort());
 			reg.bind("TimeOper", timeStub);
 			reg.bind("NetOper", netStub);
 			reg.bind("ElecProc", procStub);
@@ -84,12 +84,16 @@ public class Main {
 		//Node is not bootstrap
 			try{
 				Registry reg = LocateRegistry.getRegistry(cp.bootstrap(), cp.b_port());
-				log.debug("bootstrap: "+cp.bootstrap());
-				log.debug("rmi port: "+cp.b_port());
 				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
 				//RMI call to boostrap node to get leader
 				Variables.setCurLeader(elProc.publishLeader());
-				log.debug(Variables.getCurLeader());
+				log.debug("Leader:"+Variables.getCurLeader());
+				//Connect to leader
+				reg = LocateRegistry.getRegistry(Variables.getCurLeader().getIpAddr(),
+						Variables.getCurLeader().getRmiPort());
+				NetOperInt netOper = (NetOperInt) reg.lookup("NetOper");
+				//Send current Node info to leader
+				netOper.addNode(thisNode);
 			}catch(RemoteException e){
 				e.printStackTrace();
 			}catch(NotBoundException e){
@@ -97,5 +101,4 @@ public class Main {
 			}
 		}
 	}
-
 }

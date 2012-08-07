@@ -6,6 +6,7 @@ public class Variables {
 	private static String uid;
 	private static Nodes nextNode;
 	private static Nodes curLeader;
+	private static int rmiPort;
 	
 	public static void setParticipant(int participant){
 		isParticipant = participant;
@@ -22,6 +23,9 @@ public class Variables {
 	public static void setUID(String myUid){
 		uid = myUid;
 	}
+	public static void setRmiPort(int RMIPort){
+		rmiPort = RMIPort;
+	}
 	public static String getUID(){
 		return uid;
 	}
@@ -36,5 +40,8 @@ public class Variables {
 	}
 	public static Nodes getCurLeader(){
 		return curLeader;
+	}
+	public static int getRmiPort(){
+		return rmiPort;
 	}
 }

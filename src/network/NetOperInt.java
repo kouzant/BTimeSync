@@ -7,5 +7,5 @@ import election.Nodes;
 
 public interface NetOperInt extends Remote {
 	public void addNode(Nodes node) throws RemoteException;
-	public String hello() throws RemoteException;
+	public void successors() throws RemoteException;
 }
