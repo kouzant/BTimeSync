@@ -8,10 +8,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import election.Nodes;
 import election.ProceduresInt;
 
 public class NetOper implements NetOperInt{
+	Logger log = Logger.getLogger(NetOper.class);
 	private LinkedList<Nodes> nodesList = new LinkedList<Nodes>();
 	
 	public void addNode(Nodes node){
@@ -21,18 +25,17 @@ public class NetOper implements NetOperInt{
 	}
 	
 	public void successors(){
-		Iterator<Nodes> nodesIt = nodesList.iterator();
+		BasicConfigurator.configure();
 		Nodes curNode, nxtNode;
-		int length = nodesList.size(), counter = 1;
 		
-		while(nodesIt.hasNext()){
-			curNode = nodesIt.next();
-			if(counter == length){
+		for(int index = 0; index < nodesList.size(); index++){
+			if(index == (nodesList.size() - 1)){
+				curNode = nodesList.get(index);
 				nxtNode = nodesList.getFirst();
 			}else{
-				nxtNode = nodesIt.next();
+				curNode = nodesList.get(index);
+				nxtNode = nodesList.get(index + 1);
 			}
-			
 			//Connect to curNode and inform about the next node
 			try{
 				Registry reg = LocateRegistry.getRegistry(curNode.getIpAddr(), 
@@ -44,7 +47,6 @@ public class NetOper implements NetOperInt{
 			}catch(NotBoundException e){
 				e.printStackTrace();
 			}
-			counter++;
 		}
 		
 	}

@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.BasicConfigurator;
@@ -99,6 +100,27 @@ public class Main {
 			}catch(NotBoundException e){
 				e.printStackTrace();
 			}
+		}else{
+			//Bootstrap
+			//Add itself to the nodes list
+			try{
+				log.debug("bootstrap:"+Variables.getRmiPort());
+				Registry reg = LocateRegistry.getRegistry("127.0.0.1", 
+						Variables.getRmiPort());
+				NetOperInt netOper = (NetOperInt) reg.lookup("NetOper");
+				netOper.addNode(thisNode);
+			}catch(RemoteException e){
+				e.printStackTrace();
+			}catch(NotBoundException e){
+				e.printStackTrace();
+			}
 		}
+		//For debugging purposes
+		try{
+			TimeUnit.SECONDS.sleep(20);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
+		log.debug("Successor: "+Variables.getNextNode());
 	}
 }
