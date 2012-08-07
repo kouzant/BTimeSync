@@ -20,10 +20,9 @@ public class NetOper implements NetOperInt{
 	
 	public void addNode(Nodes node){
 		nodesList.add(node);
-		Collections.sort(nodesList);
+		//Collections.sort(nodesList);
 		successors();
 	}
-	
 	public void successors(){
 		BasicConfigurator.configure();
 		Nodes curNode, nxtNode;

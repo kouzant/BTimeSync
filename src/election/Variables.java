@@ -7,6 +7,9 @@ public class Variables {
 	private static Nodes nextNode;
 	private static Nodes curLeader;
 	private static int rmiPort;
+	public static int ELECTION_MSG = 0;
+	public static int ELECTED_MSG = 1;
+	public static int ELECTION_INTERVAL = 60; //For the time being, in seconds
 	
 	public static void setParticipant(int participant){
 		isParticipant = participant;

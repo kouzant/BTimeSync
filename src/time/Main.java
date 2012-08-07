@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -14,6 +16,7 @@ import org.apache.log4j.BasicConfigurator;
 import network.NetOper;
 import network.NetOperInt;
 
+import election.ElectionThread;
 import election.Nodes;
 import election.Procedures;
 import election.ProceduresInt;
@@ -115,6 +118,13 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		
+		//If is leader, wake the election process
+		if(Variables.isLeader()){
+			ExecutorService exec = Executors.newSingleThreadExecutor();
+			exec.execute(new ElectionThread());
+		}
+		
 		//For debugging purposes
 		try{
 			TimeUnit.SECONDS.sleep(20);
