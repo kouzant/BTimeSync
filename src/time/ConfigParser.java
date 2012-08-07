@@ -35,10 +35,10 @@ public class ConfigParser {
 		return Integer.parseInt(port);
 	}
 	public String bootstrap(){
-		return properties.getProperty("bootstrap", "127.0.0.1");
+		return properties.getProperty("bootstrap", " ");
 	}
 	public int b_port(){
-		String b_port = properties.getProperty("b_port", "2020");
+		String b_port = properties.getProperty("b_port", " ");
 		return Integer.parseInt(b_port);
 	}
 }

@@ -7,7 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-public class Utils {
+public class Utilities {
 	private int genRanNum(){
 		Random rand = new Random();
 		int randInt = rand.nextInt();

@@ -1,6 +1,12 @@
 package election;
 
-public class Nodes implements Comparable<Nodes>{
+import java.io.Serializable;
+
+public class Nodes implements Comparable<Nodes>, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2950675856529329217L;
 	private String ipAddr;
 	private String UID;
 	
@@ -18,6 +24,7 @@ public class Nodes implements Comparable<Nodes>{
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
+		sb.append("Node:").append("\n");
 		sb.append("IP Address: ").append(getIpAddr()).append("\n");
 		sb.append("UID: ").append(getUID()).append("\n");
 		return sb.toString();
