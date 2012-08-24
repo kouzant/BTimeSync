@@ -4,6 +4,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -30,6 +31,74 @@ public class Procedures implements ProceduresInt{
 			e.printStackTrace();
 		}catch(NotBoundException e){
 			e.printStackTrace();
+		}
+	}
+	public void setLeader(int code){
+		Variables.setLeader(code);
+	}
+	public void newLeader(Nodes newLeader){
+		Variables.setCurLeader(newLeader);
+		Variables.setLeader(0);
+		log.debug("The new leader is "+newLeader.getUID());
+		if (!Variables.isLeader()){
+			Nodes successor = Variables.getNextNode();
+			try{
+				Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
+						successor.getRmiPort());
+				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+				
+				elProc.newLeader(newLeader);
+			}catch(RemoteException e){
+				e.printStackTrace();
+			}catch (NotBoundException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	public void electionMes(int threshold, int counter){
+		Random rand = new Random();
+		int myRand = rand.nextInt(threshold);
+		counter +=myRand;
+		
+		if (counter >= threshold){
+			//We have a leader
+			log.debug("I am the new leader");
+			Utilities utils = new Utilities();
+			Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
+					Variables.getRmiPort());
+			
+			//Send the leader to the next node until we reach again the leader
+			if (!Variables.isLeader()){
+				Nodes successor = Variables.getNextNode();
+				try{
+					Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
+							successor.getRmiPort());
+					ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+					
+					elProc.setLeader(0);
+					elProc.newLeader(thisNode);
+				}catch(RemoteException e){
+					e.printStackTrace();
+				}catch(NotBoundException e){
+					e.printStackTrace();
+				}
+			}
+			Variables.setLeader(1);
+			Variables.setCurLeader(thisNode);
+		}else{
+			//Forward the election message
+			Nodes successor = Variables.getNextNode();
+			try{
+				Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(),
+						successor.getRmiPort());
+				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+				
+				elProc.electionMes(threshold, counter);
+			}catch(RemoteException e){
+				e.printStackTrace();
+			}catch(NotBoundException e){
+				e.printStackTrace();
+			}
 		}
 	}
 	public void message(String uid, int messageCode){

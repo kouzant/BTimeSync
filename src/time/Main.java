@@ -120,10 +120,9 @@ public class Main {
 		}
 		
 		//If is leader, wake the election process
-		if(Variables.isLeader()){
-			ExecutorService exec = Executors.newSingleThreadExecutor();
-			exec.execute(new ElectionThread());
-		}
+		
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+		exec.execute(new ElectionThread());
 		
 		//For debugging purposes
 		try{

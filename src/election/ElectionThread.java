@@ -4,6 +4,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.BasicConfigurator;
@@ -32,6 +33,20 @@ public class ElectionThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	public void sendElection(int threshold, int counter){
+		Nodes successor = Variables.getNextNode();
+		try{
+			Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
+					successor.getRmiPort());
+			ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+			
+			elProc.electionMes(threshold, counter);
+		}catch(RemoteException e){
+			e.printStackTrace();
+		}catch(NotBoundException e){
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public void run() {
 		BasicConfigurator.configure();
@@ -41,9 +56,42 @@ public class ElectionThread implements Runnable {
 			}catch(InterruptedException e){
 				e.printStackTrace();
 			}
-			Variables.setLeader(0);
+			
+			if(Variables.isLeader()){
+				int counter = 0;
+				Random rand = new Random();
+				int threshold = rand.nextInt(Integer.MAX_VALUE);
+				log.debug("Threshold = "+threshold);
+				int myRand = rand.nextInt(threshold);
+				counter += myRand;
+
+				if (counter == threshold){
+					//Election is over. Leader is the current node
+					Variables.setLeader(1);
+					Utilities utils = new Utilities();
+					Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
+							Variables.getRmiPort());
+					Variables.setCurLeader(thisNode);
+					//inform next node who's the leader if not already informed
+					Nodes successor = Variables.getNextNode();
+					try{
+						Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(),
+								successor.getRmiPort());
+						ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+
+						elProc.newLeader(thisNode);
+					}catch(RemoteException e){
+						e.printStackTrace();
+					}catch(NotBoundException e){
+						e.printStackTrace();
+					}
+				}else{
+					sendElection(threshold, counter);
+				}
+			}
+			//Variables.setLeader(0);
 			//Send Election Message to successor
-			electionMsg(Variables.ELECTED_MSG);
+			//electionMsg(Variables.ELECTED_MSG);
 			
 			//Sleep
 			Thread.yield();	
