@@ -26,6 +26,9 @@ public class Nodes implements Comparable<Nodes>, Serializable{
 	public int getRmiPort(){
 		return rmiPort;
 	}
+	public boolean isLeader(){
+		return Variables.isLeader();
+	}
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
