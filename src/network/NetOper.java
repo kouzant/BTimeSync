@@ -59,6 +59,7 @@ public class NetOper implements NetOperInt{
 				long nowLong = now.getTime();
 				long afterLong = after.getTime();
 				long rtt = afterLong - nowLong;
+				log.debug("rtt: "+ rtt + "milliseconds");
 				indexNode.setRtt(rtt);
 			}catch (RemoteException e) {
 				e.printStackTrace();

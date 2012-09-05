@@ -7,6 +7,8 @@ import java.rmi.registry.Registry;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import network.NetOper;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -58,6 +60,9 @@ public class ElectionThread implements Runnable {
 			}
 			
 			if(Variables.isLeader()){
+				//TEST
+				NetOper netOper = new NetOper();
+				netOper.getRtt();
 				int counter = 0;
 				Random rand = new Random();
 				int threshold = rand.nextInt(Integer.MAX_VALUE);
