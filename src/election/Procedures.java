@@ -40,20 +40,22 @@ public class Procedures implements ProceduresInt{
 		Variables.setCurLeader(newLeader);
 		Variables.setLeader(0);
 		log.debug("The new leader is "+newLeader.getUID());
-		if (!Variables.isLeader()){
-			Nodes successor = Variables.getNextNode();
-			try{
-				Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
-						successor.getRmiPort());
-				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
-				
+		Nodes successor = Variables.getNextNode();
+		try{
+			Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
+					successor.getRmiPort());
+			ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+
+			if (elProc.isLeader() == false)
 				elProc.newLeader(newLeader);
-			}catch(RemoteException e){
-				e.printStackTrace();
-			}catch (NotBoundException e){
-				e.printStackTrace();
-			}
+		}catch(RemoteException e){
+			e.printStackTrace();
+		}catch (NotBoundException e){
+			e.printStackTrace();
 		}
+	}
+	public boolean isLeader(){
+		return Variables.isLeader();
 	}
 	public void electionMes(int threshold, int counter){
 		Random rand = new Random();
@@ -66,25 +68,24 @@ public class Procedures implements ProceduresInt{
 			Utilities utils = new Utilities();
 			Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
 					Variables.getRmiPort());
-			
-			//Send the leader to the next node until we reach again the leader
-			if (!Variables.isLeader()){
-				Nodes successor = Variables.getNextNode();
-				try{
-					Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
-							successor.getRmiPort());
-					ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
-					
-					elProc.setLeader(0);
-					elProc.newLeader(thisNode);
-				}catch(RemoteException e){
-					e.printStackTrace();
-				}catch(NotBoundException e){
-					e.printStackTrace();
-				}
-			}
 			Variables.setLeader(1);
 			Variables.setCurLeader(thisNode);
+
+			Nodes successor = Variables.getNextNode();
+			try{
+				Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
+						successor.getRmiPort());
+				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
+				
+				if(elProc.isLeader() == false){
+					elProc.setLeader(0);
+					elProc.newLeader(thisNode);
+				}
+			}catch(RemoteException e){
+				e.printStackTrace();
+			}catch(NotBoundException e){
+				e.printStackTrace();
+			}
 		}else{
 			//Forward the election message
 			Nodes successor = Variables.getNextNode();

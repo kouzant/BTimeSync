@@ -64,6 +64,7 @@ public class ElectionThread implements Runnable {
 				log.debug("Threshold = "+threshold);
 				int myRand = rand.nextInt(threshold);
 				counter += myRand;
+				Variables.setLeader(0);
 
 				if (counter == threshold){
 					//Election is over. Leader is the current node
@@ -78,8 +79,8 @@ public class ElectionThread implements Runnable {
 						Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(),
 								successor.getRmiPort());
 						ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
-
-						elProc.newLeader(thisNode);
+						if(elProc.isLeader() == false)
+							elProc.newLeader(thisNode);
 					}catch(RemoteException e){
 						e.printStackTrace();
 					}catch(NotBoundException e){
@@ -88,6 +89,7 @@ public class ElectionThread implements Runnable {
 				}else{
 					sendElection(threshold, counter);
 				}
+				counter = 0;
 			}
 			//Variables.setLeader(0);
 			//Send Election Message to successor

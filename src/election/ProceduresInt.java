@@ -10,4 +10,5 @@ public interface ProceduresInt extends Remote {
 	public void electionMes(int threshold, int counter) throws RemoteException;
 	public void newLeader(Nodes newLeader) throws RemoteException;
 	public void setLeader(int code) throws RemoteException;
+	public boolean isLeader() throws RemoteException;
 }
