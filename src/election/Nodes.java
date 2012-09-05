@@ -10,13 +10,29 @@ public class Nodes implements Comparable<Nodes>, Serializable{
 	private String ipAddr;
 	private String UID;
 	private int rmiPort;
+	private long rtt;
+	private long time;
 	
 	public Nodes(String ipAddr, String UID, int rmiPort){
 		this.ipAddr = ipAddr;
 		this.UID = UID;
 		this.rmiPort = rmiPort;
+		rtt = 0L;
+		time = 0L;
 	}
 	
+	public long getRtt(){
+		return rtt;
+	}
+	public void setRtt(long rtt){
+		this.rtt = rtt;
+	}
+	public long getTime(){
+		return time;
+	}
+	public void setTime(long time){
+		this.time = time;
+	}
 	public String getIpAddr(){
 		return ipAddr;
 	}
