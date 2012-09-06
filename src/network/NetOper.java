@@ -4,14 +4,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,13 +36,11 @@ public class NetOper implements NetOperInt{
 		Variables.setNodesList(nodesList);
 	}
 	public void getRtt(){
-		log.debug("Reached here!");
 		LinkedList<Nodes> nodesList = Variables.getNodesList();
 		Iterator<Nodes> nodesIter = nodesList.iterator();
 		Nodes indexNode;
 		
 		while(nodesIter.hasNext()){
-			log.debug("Inside list iteration");
 			indexNode = nodesIter.next();
 			//ICMP default packet size is 56 bytes
 			byte[] packet = new byte[56];
