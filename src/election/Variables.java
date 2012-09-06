@@ -1,5 +1,7 @@
 package election;
 
+import java.util.LinkedList;
+
 public class Variables {
 	private static int isParticipant;
 	private static int leader;
@@ -7,10 +9,17 @@ public class Variables {
 	private static Nodes nextNode;
 	private static Nodes curLeader;
 	private static int rmiPort;
+	private static LinkedList<Nodes> nodesList = new LinkedList<Nodes>();
 	public static int ELECTION_MSG = 0;
 	public static int ELECTED_MSG = 1;
-	public static int ELECTION_INTERVAL = 60; //For the time being, in seconds
+	public static int ELECTION_INTERVAL = 20; //For the time being, in second
 	
+	public static void setNodesList(LinkedList<Nodes> nodes){
+		nodesList = nodes;
+	}
+	public static LinkedList<Nodes> getNodesList(){
+		return nodesList;
+	}
 	public static void setParticipant(int participant){
 		isParticipant = participant;
 	}

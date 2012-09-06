@@ -15,31 +15,36 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import election.Nodes;
 import election.ProceduresInt;
+import election.Variables;
 
 public class NetOper implements NetOperInt{
 	Logger log = Logger.getLogger(NetOper.class);
-	private LinkedList<Nodes> nodesList = new LinkedList<Nodes>();
 	
 	public void addNode(Nodes node){
+		LinkedList<Nodes> nodesList = Variables.getNodesList();
 		nodesList.add(node);
 		//Collections.sort(nodesList);
 		successors();
 	}
 	public void setNodesList(LinkedList<Nodes> nodesList){
-		log.debug("New nodesList, size: "+nodesList.size());
-		this.nodesList = nodesList;
+		Variables.setNodesList(nodesList);
 	}
 	public void getRtt(){
+		log.debug("Reached here!");
+		LinkedList<Nodes> nodesList = Variables.getNodesList();
 		Iterator<Nodes> nodesIter = nodesList.iterator();
 		Nodes indexNode;
 		
 		while(nodesIter.hasNext()){
+			log.debug("Inside list iteration");
 			indexNode = nodesIter.next();
 			//ICMP default packet size is 56 bytes
 			byte[] packet = new byte[56];
@@ -71,23 +76,13 @@ public class NetOper implements NetOperInt{
 		}
 	}
 	public void prepareTcpServer(){
-		try{
-			//ICMP default packet size is 56 bytes
-			byte[] packet = new byte[56];
-			ServerSocket sSocket = new ServerSocket(8008);
-			Socket socket = sSocket.accept();
-			BufferedReader read = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			DataOutputStream write = new DataOutputStream(socket.getOutputStream());
-			read.read();
-			write.write(packet);
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+		exec.execute(new TCPServer());
 	}
 	public void successors(){
 		BasicConfigurator.configure();
 		Nodes curNode, nxtNode;
+		LinkedList<Nodes> nodesList = Variables.getNodesList();
 		
 		for(int index = 0; index < nodesList.size(); index++){
 			if(index == (nodesList.size() - 1)){
