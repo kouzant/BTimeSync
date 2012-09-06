@@ -41,6 +41,7 @@ public class Main {
 		}
 		ConfigParser cp = new ConfigParser(configFile);
 		Variables.setRmiPort(cp.rmiPort());
+		Variables.setTcpPort(cp.tcpPort());
 		Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
 				Variables.getRmiPort());
 		log.debug("This node:"+thisNode);
@@ -121,8 +122,9 @@ public class Main {
 		
 		//If is leader, wake the election process
 		
-		ExecutorService exec = Executors.newSingleThreadExecutor();
+		ExecutorService exec = Executors.newCachedThreadPool();
 		exec.execute(new ElectionThread());
+		exec.execute(new TimeSync());
 		
 		//For debugging purposes
 		try{

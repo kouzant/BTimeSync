@@ -10,6 +10,8 @@ import java.net.Socket;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import election.Variables;
+
 public class TCPServer implements Runnable{
 	Logger log = Logger.getLogger(TCPServer.class);
 	@Override
@@ -18,7 +20,8 @@ public class TCPServer implements Runnable{
 		try{
 			//ICMP default packet size is 56 bytes
 			byte[] packet = new byte[56];
-			ServerSocket sSocket = new ServerSocket(8008);
+			log.debug("tcpport = "+Variables.getTcpPort());
+			ServerSocket sSocket = new ServerSocket(Variables.getTcpPort());
 			Socket socket = sSocket.accept();
 			log.debug("tcp server ready!");
 			BufferedReader read = new BufferedReader(new InputStreamReader(
@@ -26,6 +29,10 @@ public class TCPServer implements Runnable{
 			DataOutputStream write = new DataOutputStream(socket.getOutputStream());
 			read.read();
 			write.write(packet);
+			read.close();
+			write.close();
+			socket.close();
+			sSocket.close();
 		}catch(IOException e){
 			e.printStackTrace();
 		}

@@ -3,3 +3,4 @@ t_error=20
 rmiport=2022
 bootstrap=127.0.0.1
 b_port=2020
+tcpport=8010

@@ -60,9 +60,6 @@ public class ElectionThread implements Runnable {
 			}
 			
 			if(Variables.isLeader()){
-				//TEST
-				NetOper netOper = new NetOper();
-				netOper.getRtt();
 				int counter = 0;
 				Random rand = new Random();
 				int threshold = rand.nextInt(Integer.MAX_VALUE);

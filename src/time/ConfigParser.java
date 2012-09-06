@@ -22,6 +22,10 @@ public class ConfigParser {
 		}
 	}
 	
+	public int tcpPort(){
+		String tcpPort = properties.getProperty("tcpport", "0");
+		return Integer.parseInt(tcpPort);
+	}
 	public int isLeader(){
 		String lead = properties.getProperty("leader", "0");
 		return Integer.parseInt(lead);

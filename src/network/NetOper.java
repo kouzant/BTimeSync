@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -53,13 +54,23 @@ public class NetOper implements NetOperInt{
 						indexNode.getRmiPort());
 				NetOperInt netOper = (NetOperInt) reg.lookup("NetOper");
 				netOper.prepareTcpServer();
-				Socket cSocket = new Socket(indexNode.getIpAddr(), 8008);
+				int tcpPort = netOper.getTcpPort();
+				try{
+					TimeUnit.SECONDS.sleep(1);
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+				log.debug("Connecting to port: "+tcpPort);
+				Socket cSocket = new Socket(indexNode.getIpAddr(), tcpPort);
 				DataOutputStream write = new DataOutputStream(cSocket.getOutputStream());
 				BufferedReader read = new BufferedReader(new InputStreamReader(
 						cSocket.getInputStream()));
 				Date now = new Date();
 				write.write(packet);
 				read.read();
+				write.close();
+				read.close();
+				cSocket.close();
 				Date after = new Date();
 				long nowLong = now.getTime();
 				long afterLong = after.getTime();
@@ -74,6 +85,9 @@ public class NetOper implements NetOperInt{
 				e.printStackTrace();
 			}
 		}
+	}
+	public int getTcpPort(){
+		return Variables.getTcpPort();
 	}
 	public void prepareTcpServer(){
 		ExecutorService exec = Executors.newSingleThreadExecutor();

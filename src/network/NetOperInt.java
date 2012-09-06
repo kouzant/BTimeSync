@@ -11,4 +11,5 @@ public interface NetOperInt extends Remote {
 	public void successors() throws RemoteException;
 	public void prepareTcpServer() throws RemoteException;
 	public void setNodesList(LinkedList<Nodes> nodesList) throws RemoteException;
+	public int getTcpPort() throws RemoteException;
 }

@@ -10,10 +10,18 @@ public class Variables {
 	private static Nodes curLeader;
 	private static int rmiPort;
 	private static LinkedList<Nodes> nodesList = new LinkedList<Nodes>();
+	private static int tcpPort;
 	public static int ELECTION_MSG = 0;
 	public static int ELECTED_MSG = 1;
-	public static int ELECTION_INTERVAL = 20; //For the time being, in second
+	public static int ELECTION_INTERVAL = 60; //For the time being, in seconds
+	public static int TIME_POLL_INTERVAL = 10; //For the time being, in seconds
 	
+	public static void setTcpPort(int port){
+		tcpPort = port;
+	}
+	public static int getTcpPort(){
+		return tcpPort;
+	}
 	public static void setNodesList(LinkedList<Nodes> nodes){
 		nodesList = nodes;
 	}
