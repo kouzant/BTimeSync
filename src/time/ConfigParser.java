@@ -31,7 +31,7 @@ public class ConfigParser {
 		return Integer.parseInt(lead);
 	}
 	public int timeError(){
-		String terror = properties.getProperty("terror", "5");
+		String terror = properties.getProperty("t_error", "5");
 		return Integer.parseInt(terror);
 	}
 	public int rmiPort(){

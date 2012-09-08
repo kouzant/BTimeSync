@@ -24,9 +24,7 @@ public class TimeSync implements Runnable {
 			}catch(InterruptedException e){
 				e.printStackTrace();
 			}
-			log.debug("Outside if statement");
 			if(Variables.isLeader() == true){
-				log.debug("Inside if statement");
 				NetOper netOper = new NetOper();
 				netOper.getRtt();
 				try{
@@ -39,6 +37,12 @@ public class TimeSync implements Runnable {
 							Variables.getRmiPort());
 					TimeOperInt timeOper = (TimeOperInt) reg.lookup("TimeOper");
 					timeOper.getNodesTime();
+					try{
+						TimeUnit.SECONDS.sleep(1);
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+					timeOper.computeFix();
 				}catch(RemoteException e){
 					e.printStackTrace();
 				}catch(NotBoundException e){

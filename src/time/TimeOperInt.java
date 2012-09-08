@@ -12,4 +12,5 @@ public interface TimeOperInt extends Remote {
 	public void fixErrorAmount(int fix) throws RemoteException;
 	public long getRunningTime() throws RemoteException;
 	public void getNodesTime() throws RemoteException;
+	public void computeFix() throws RemoteException;
 }

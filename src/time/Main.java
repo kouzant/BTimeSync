@@ -62,8 +62,6 @@ public class Main {
 			TimeOper oper = new TimeOper();
 			NetOper mess = new NetOper();
 			Procedures elProc = new Procedures();
-			//First argument is the amount of the time error
-			oper.setAmount(amount);
 			//Create stub
 			TimeOperInt timeStub = (TimeOperInt) UnicastRemoteObject.
 					exportObject(oper, 0);
@@ -77,13 +75,19 @@ public class Main {
 			reg.bind("TimeOper", timeStub);
 			reg.bind("NetOper", netStub);
 			reg.bind("ElecProc", procStub);
+			//Add amount of time error
+			Registry reg1 = LocateRegistry.getRegistry("127.0.0.1", Variables.getRmiPort());
+			TimeOperInt timeOper = (TimeOperInt) reg1.lookup("TimeOper");
+			timeOper.setAmount(amount);
 			log.info("Server is up!");
 		}catch(RemoteException e){
 			e.printStackTrace();
 		}catch(AlreadyBoundException e){
 			e.printStackTrace();
+		}catch(NotBoundException e){
+			e.printStackTrace();
 		}
-
+		
 		if (!cp.bootstrap().equals(" ")){
 			log.debug("Not bootstrap node");
 		//Node is not bootstrap

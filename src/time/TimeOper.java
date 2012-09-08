@@ -8,10 +8,14 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import election.Nodes;
 import election.Variables;
 
 public class TimeOper implements TimeOperInt{
+	Logger log = Logger.getLogger(TimeOper.class);
 	private int amount = 0;
 	
 	public void setAmount(int amount){
@@ -59,6 +63,16 @@ public class TimeOper implements TimeOperInt{
 			}catch(NotBoundException e){
 				e.printStackTrace();
 			}
+		}
+	}
+	public void computeFix(){
+		BasicConfigurator.configure();
+		LinkedList<Nodes> nodesList = Variables.getNodesList();
+		Nodes indexNode = null;
+		Iterator<Nodes> nodesIter = nodesList.iterator();
+		
+		while(nodesIter.hasNext()){
+			indexNode = nodesIter.next();
 		}
 	}
 	public String printWrongTime(){
