@@ -9,7 +9,7 @@ public interface TimeOperInt extends Remote {
 	public Calendar getTime() throws RemoteException;
 	public String printTime(Calendar now) throws RemoteException;
 	public String printWrongTime() throws RemoteException;
-	public void fixErrorAmount(int fix) throws RemoteException;
+	public void fixErrorAmount(long fix) throws RemoteException;
 	public long getRunningTime() throws RemoteException;
 	public void getNodesTime() throws RemoteException;
 	public void computeFix() throws RemoteException;

@@ -112,7 +112,8 @@ public class TimeOper implements TimeOperInt{
 		
 		return time;
 	}
-	public void fixErrorAmount(int fix){
-		setAmount(amount + fix);
+	public void fixErrorAmount(long fix){
+		int fixInt = (int) fix;
+		setAmount(amount + fixInt);
 	}
 }
