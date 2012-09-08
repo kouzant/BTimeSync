@@ -70,9 +70,39 @@ public class TimeOper implements TimeOperInt{
 		LinkedList<Nodes> nodesList = Variables.getNodesList();
 		Nodes indexNode = null;
 		Iterator<Nodes> nodesIter = nodesList.iterator();
+		Long timeSum = 0L;
+		Long timeSumAvg = 0L;
+		Long corTimeSum = 0L;
+		Long corTimeSumAvg = 0L;
+		int counter = 0;
 		
+		//Compute a general average
+		while(nodesIter.hasNext()){
+			timeSum += nodesIter.next().getTime();
+		}
+		timeSumAvg = timeSum / nodesList.size();
+		nodesIter = nodesList.iterator();
+		
+		//Compute average but exclude extreme values (20 seconds)
 		while(nodesIter.hasNext()){
 			indexNode = nodesIter.next();
+			if(((indexNode.getTime() - timeSumAvg) > 20000) || 
+					((timeSumAvg - indexNode.getTime()) > 20000)){
+				continue;
+			}else{
+				corTimeSum += indexNode.getTime();
+				counter++;
+			}
+		}
+		corTimeSumAvg = corTimeSum / counter;
+		
+		//Store fix for every node
+		nodesIter = nodesList.iterator();
+		while(nodesIter.hasNext()){
+			indexNode= nodesIter.next();
+			long fix = corTimeSumAvg - indexNode.getTime();
+			log.debug("FIX: "+fix);
+			indexNode.setFix(fix);
 		}
 	}
 	public String printWrongTime(){

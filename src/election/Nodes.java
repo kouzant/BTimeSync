@@ -12,6 +12,7 @@ public class Nodes implements Comparable<Nodes>, Serializable{
 	private int rmiPort;
 	private long rtt;
 	private long time;
+	private long fix;
 	
 	public Nodes(String ipAddr, String UID, int rmiPort){
 		this.ipAddr = ipAddr;
@@ -19,8 +20,15 @@ public class Nodes implements Comparable<Nodes>, Serializable{
 		this.rmiPort = rmiPort;
 		rtt = 0L;
 		time = 0L;
+		fix = 0L;
 	}
 	
+	public long getFix(){
+		return fix;
+	}
+	public void setFix(long fix){
+		this.fix = fix;
+	}
 	public long getRtt(){
 		return rtt;
 	}
