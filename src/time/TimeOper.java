@@ -20,6 +20,7 @@ public class TimeOper implements TimeOperInt{
 	
 	public void setAmount(int amount){
 		this.amount = amount;
+		log.debug("Error: "+amount);
 	}
 	public Calendar getTime(){
 		Calendar now = Calendar.getInstance();
@@ -36,7 +37,7 @@ public class TimeOper implements TimeOperInt{
 	}
 	public Calendar appendError(){
 		Calendar now = getTime();
-		now.add(Calendar.SECOND, amount);
+		now.add(Calendar.MILLISECOND, amount);
 		
 		return now;
 	}
@@ -101,7 +102,6 @@ public class TimeOper implements TimeOperInt{
 		while(nodesIter.hasNext()){
 			indexNode= nodesIter.next();
 			long fix = corTimeSumAvg - indexNode.getTime();
-			log.debug("FIX: "+fix);
 			indexNode.setFix(fix);
 		}
 	}
