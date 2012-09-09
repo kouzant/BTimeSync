@@ -79,6 +79,7 @@ public class Main {
 			Registry reg1 = LocateRegistry.getRegistry("127.0.0.1", Variables.getRmiPort());
 			TimeOperInt timeOper = (TimeOperInt) reg1.lookup("TimeOper");
 			timeOper.setAmount(amount);
+			timeOper.appendError();
 			log.info("Server is up!");
 		}catch(RemoteException e){
 			e.printStackTrace();
@@ -89,14 +90,12 @@ public class Main {
 		}
 		
 		if (!cp.bootstrap().equals(" ")){
-			log.debug("Not bootstrap node");
 		//Node is not bootstrap
 			try{
 				Registry reg = LocateRegistry.getRegistry(cp.bootstrap(), cp.b_port());
 				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
 				//RMI call to boostrap node to get leader
 				Variables.setCurLeader(elProc.publishLeader());
-				log.debug("Leader:"+Variables.getCurLeader());
 				//Connect to leader
 				reg = LocateRegistry.getRegistry(Variables.getCurLeader().getIpAddr(),
 						Variables.getCurLeader().getRmiPort());
@@ -112,7 +111,6 @@ public class Main {
 			//Bootstrap
 			//Add itself to the nodes list
 			try{
-				log.debug("bootstrap:"+Variables.getRmiPort());
 				Registry reg = LocateRegistry.getRegistry("127.0.0.1", 
 						Variables.getRmiPort());
 				NetOperInt netOper = (NetOperInt) reg.lookup("NetOper");
@@ -136,6 +134,6 @@ public class Main {
 		}catch(InterruptedException e){
 			e.printStackTrace();
 		}
-		log.debug("Successor: "+Variables.getNextNode());
+		System.out.println("Successor: "+Variables.getNextNode());
 	}
 }

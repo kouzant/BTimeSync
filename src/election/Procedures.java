@@ -39,7 +39,6 @@ public class Procedures implements ProceduresInt{
 	public void newLeader(Nodes newLeader){
 		Variables.setCurLeader(newLeader);
 		Variables.setLeader(0);
-		log.debug("The new leader is "+newLeader.getUID());
 		Nodes successor = Variables.getNextNode();
 		try{
 			Registry reg = LocateRegistry.getRegistry(successor.getIpAddr(), 
@@ -64,7 +63,6 @@ public class Procedures implements ProceduresInt{
 		
 		if (counter >= threshold){
 			//We have a leader
-			log.debug("I am the new leader");
 			Utilities utils = new Utilities();
 			Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
 					Variables.getRmiPort());
@@ -103,9 +101,6 @@ public class Procedures implements ProceduresInt{
 		}
 	}
 	public void message(String uid, int messageCode){
-		log.debug("Election UID: "+uid);
-		log.debug("Election code: "+messageCode);
-		
 		if(messageCode == Variables.ELECTION_MSG){
 			if(Variables.getUID().compareTo(uid) > 0){
 				fwMessage(uid, messageCode);
@@ -116,8 +111,6 @@ public class Procedures implements ProceduresInt{
 					isParticipant()){
 				fwMessage(uid, messageCode);
 			}else if(Variables.getUID().compareTo(uid) == 0){
-				log.debug("We have a new leader");
-				log.debug("UID: "+uid);
 				Variables.setLeader(1);
 				fwMessage(uid, Variables.ELECTED_MSG);
 				Variables.setParticipant(0);
@@ -127,7 +120,6 @@ public class Procedures implements ProceduresInt{
 				Variables.setParticipant(0);
 				fwMessage(uid, Variables.ELECTED_MSG);
 			}else{
-				log.debug("ELECTED");
 			}
 		}
 	}

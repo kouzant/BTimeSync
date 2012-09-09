@@ -55,7 +55,6 @@ public class NetOper implements NetOperInt{
 				}catch(InterruptedException e){
 					e.printStackTrace();
 				}
-				log.debug("Connecting to port: "+tcpPort);
 				Socket cSocket = new Socket(indexNode.getIpAddr(), tcpPort);
 				DataOutputStream write = new DataOutputStream(cSocket.getOutputStream());
 				BufferedReader read = new BufferedReader(new InputStreamReader(
@@ -70,7 +69,6 @@ public class NetOper implements NetOperInt{
 				long nowLong = now.getTime();
 				long afterLong = after.getTime();
 				long rtt = afterLong - nowLong;
-				log.debug("rtt: "+ rtt + "milliseconds");
 				indexNode.setRtt(rtt);
 			}catch (RemoteException e) {
 				e.printStackTrace();

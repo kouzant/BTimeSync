@@ -19,12 +19,13 @@ import election.Variables;
 
 public class TimeOper implements TimeOperInt{
 	Logger log = Logger.getLogger(TimeOper.class);
-	private int amount = 0;
-	private Date time = new Date();
+	private int amount;
+	private Date time;
 	
 	public void setAmount(int amount){
 		this.amount = amount;
-		log.debug("Error: "+amount);
+		System.err.println("Error: "+this.amount);
+		
 	}
 	public Date getTime(){
 		Date now = new Date();
@@ -39,9 +40,8 @@ public class TimeOper implements TimeOperInt{
 	}
 	public Date appendError(){
 		Date now = getTime();
-		DateUtils.addMilliseconds(now, amount);
-		time = now;
-		
+		now = DateUtils.addMilliseconds(now, amount);
+		System.out.println("Time: "+now);
 		return now;
 	}
 	public long getRunningTime(){
@@ -90,8 +90,6 @@ public class TimeOper implements TimeOperInt{
 		//Compute average but exclude extreme values (5 minutes)
 		while(nodesIter.hasNext()){
 			indexNode = nodesIter.next();
-			log.debug("node time: "+indexNode.getTime());
-			log.debug("timeSumAvg: "+timeSumAvg);
 			if(((indexNode.getTime() - timeSumAvg) > 300000) || 
 					((timeSumAvg - indexNode.getTime()) > 300000)){
 				continue;

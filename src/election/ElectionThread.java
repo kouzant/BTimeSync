@@ -16,9 +16,6 @@ public class ElectionThread implements Runnable {
 	Logger log = Logger.getLogger(ElectionThread.class);
 	Procedures elProc = new Procedures();
 	
-	private void printer(){
-		log.debug("Election Thread");
-	}
 	public void electionMsg(int message){
 		Nodes successor = Variables.getNextNode();
 		try{
@@ -63,7 +60,6 @@ public class ElectionThread implements Runnable {
 				int counter = 0;
 				Random rand = new Random();
 				int threshold = rand.nextInt(Integer.MAX_VALUE);
-				log.debug("Threshold = "+threshold);
 				int myRand = rand.nextInt(threshold);
 				counter += myRand;
 				Variables.setLeader(0);

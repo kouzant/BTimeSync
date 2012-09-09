@@ -14,7 +14,7 @@ public class Variables {
 	public static int ELECTION_MSG = 0;
 	public static int ELECTED_MSG = 1;
 	public static int ELECTION_INTERVAL = 60; //For the time being, in seconds
-	public static int TIME_POLL_INTERVAL = 10; //For the time being, in seconds
+	public static int TIME_POLL_INTERVAL = 33; //For the time being, in seconds
 	
 	public static void setTcpPort(int port){
 		tcpPort = port;

@@ -20,10 +20,8 @@ public class TCPServer implements Runnable{
 		try{
 			//ICMP default packet size is 56 bytes
 			byte[] packet = new byte[56];
-			log.debug("tcpport = "+Variables.getTcpPort());
 			ServerSocket sSocket = new ServerSocket(Variables.getTcpPort());
 			Socket socket = sSocket.accept();
-			log.debug("tcp server ready!");
 			BufferedReader read = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			DataOutputStream write = new DataOutputStream(socket.getOutputStream());

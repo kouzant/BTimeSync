@@ -3,9 +3,6 @@ package election;
 import java.io.Serializable;
 
 public class Nodes implements Comparable<Nodes>, Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2950675856529329217L;
 	private String ipAddr;
 	private String UID;

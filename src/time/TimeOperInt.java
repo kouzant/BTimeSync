@@ -15,4 +15,5 @@ public interface TimeOperInt extends Remote {
 	public void computeFix() throws RemoteException;
 	public void pushFix() throws RemoteException;
 	public int getAmount() throws RemoteException;
+	public Date appendError() throws RemoteException;
 }
