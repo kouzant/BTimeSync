@@ -1,5 +1,5 @@
 leader=1
-t_error=60000
+t_error=-60000
 rmiport=2020
 tcpport=8008
 #bootstrap=127.0.0.1

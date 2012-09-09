@@ -31,7 +31,7 @@ public class Main {
 		String configFile="config/client";
 		int amount = 0;
 		Variables.setUID(utils.getUID());
-		log.info("UID: " + Variables.getUID());
+		System.out.println("UID: " + Variables.getUID());
 		
 		//Parse configuration file
 		for (int i = 0; i < args.length; i++){
@@ -44,14 +44,14 @@ public class Main {
 		Variables.setTcpPort(cp.tcpPort());
 		Nodes thisNode = new Nodes(utils.getIpAddr(), Variables.getUID(), 
 				Variables.getRmiPort());
-		log.debug("This node:"+thisNode);
+		System.out.println("This node:"+thisNode);
 		if (cp.bootstrap().equals(" ")){
 		//Bootstrap node
-			log.debug("Bootstrap and Leader!");
+			System.out.println("Bootstrap and Leader!");
 			Variables.setLeader(1);	
 			Variables.setCurLeader(thisNode);
 		}else{
-			log.debug("Not a leader!");
+			System.out.println("Not a leader!");
 			Variables.setLeader(0);
 		}
 		Variables.setParticipant(0);
@@ -80,7 +80,6 @@ public class Main {
 			TimeOperInt timeOper = (TimeOperInt) reg1.lookup("TimeOper");
 			timeOper.setAmount(amount);
 			timeOper.appendError();
-			log.info("Server is up!");
 		}catch(RemoteException e){
 			e.printStackTrace();
 		}catch(AlreadyBoundException e){
@@ -122,13 +121,10 @@ public class Main {
 			}
 		}
 		
-		//If is leader, wake the election process
-		
 		ExecutorService exec = Executors.newCachedThreadPool();
 		exec.execute(new ElectionThread());
 		exec.execute(new TimeSync());
 		
-		//For debugging purposes
 		try{
 			TimeUnit.SECONDS.sleep(20);
 		}catch(InterruptedException e){

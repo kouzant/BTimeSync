@@ -53,7 +53,6 @@ public class Nodes implements Comparable<Nodes>, Serializable{
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Node:").append("\n");
 		sb.append("IP Address: ").append(getIpAddr()).append("\n");
 		sb.append("RMI Port: ").append(rmiPort).append("\n");
 		sb.append("UID: ").append(getUID()).append("\n");

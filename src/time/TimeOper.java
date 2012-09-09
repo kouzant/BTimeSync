@@ -4,12 +4,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -24,7 +23,6 @@ public class TimeOper implements TimeOperInt{
 	
 	public void setAmount(int amount){
 		this.amount = amount;
-		System.err.println("Error: "+this.amount);
 		
 	}
 	public Date getTime(){
@@ -41,7 +39,9 @@ public class TimeOper implements TimeOperInt{
 	public Date appendError(){
 		Date now = getTime();
 		now = DateUtils.addMilliseconds(now, amount);
-		System.out.println("Time: "+now);
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SS");
+		String time = formatter.format(now);
+		System.out.println("Time: "+time);
 		return now;
 	}
 	public long getRunningTime(){
