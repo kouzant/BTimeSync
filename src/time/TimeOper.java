@@ -87,13 +87,13 @@ public class TimeOper implements TimeOperInt{
 		timeSumAvg = timeSum / nodesList.size();
 		nodesIter = nodesList.iterator();
 		
-		//Compute average but exclude extreme values (20 seconds)
+		//Compute average but exclude extreme values (5 minutes)
 		while(nodesIter.hasNext()){
 			indexNode = nodesIter.next();
 			log.debug("node time: "+indexNode.getTime());
 			log.debug("timeSumAvg: "+timeSumAvg);
-			if(((indexNode.getTime() - timeSumAvg) > 20000) || 
-					((timeSumAvg - indexNode.getTime()) > 20000)){
+			if(((indexNode.getTime() - timeSumAvg) > 300000) || 
+					((timeSumAvg - indexNode.getTime()) > 300000)){
 				continue;
 			}else{
 				corTimeSum += indexNode.getTime();
