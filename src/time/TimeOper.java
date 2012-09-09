@@ -5,9 +5,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -17,33 +20,33 @@ import election.Variables;
 public class TimeOper implements TimeOperInt{
 	Logger log = Logger.getLogger(TimeOper.class);
 	private int amount = 0;
+	private Date time = new Date();
 	
 	public void setAmount(int amount){
 		this.amount = amount;
 		log.debug("Error: "+amount);
 	}
-	public Calendar getTime(){
-		Calendar now = Calendar.getInstance();
+	public Date getTime(){
+		Date now = new Date();
 		
 		return now;
 	}
-	public String printTime(Calendar now){
-		StringBuilder time = new StringBuilder();
-		time.append(now.get(Calendar.HOUR_OF_DAY))
-		.append(":").append(now.get(Calendar.MINUTE))
-		.append(":").append(now.get(Calendar.SECOND)).append("\n");
-		
+	public String printTime(){
 		return time.toString();
 	}
-	public Calendar appendError(){
-		Calendar now = getTime();
-		now.add(Calendar.MILLISECOND, amount);
+	public int getAmount(){
+		return amount;
+	}
+	public Date appendError(){
+		Date now = getTime();
+		DateUtils.addMilliseconds(now, amount);
+		time = now;
 		
 		return now;
 	}
 	public long getRunningTime(){
-		Calendar time = appendError();
-		long timeLong = time.getTimeInMillis();
+		Date time = appendError();
+		long timeLong = time.getTime();
 		return timeLong;
 	}
 	public void getNodesTime(){
@@ -87,6 +90,8 @@ public class TimeOper implements TimeOperInt{
 		//Compute average but exclude extreme values (20 seconds)
 		while(nodesIter.hasNext()){
 			indexNode = nodesIter.next();
+			log.debug("node time: "+indexNode.getTime());
+			log.debug("timeSumAvg: "+timeSumAvg);
 			if(((indexNode.getTime() - timeSumAvg) > 20000) || 
 					((timeSumAvg - indexNode.getTime()) > 20000)){
 				continue;
@@ -99,21 +104,41 @@ public class TimeOper implements TimeOperInt{
 		
 		//Store fix for every node
 		nodesIter = nodesList.iterator();
+		long fix =0L;
 		while(nodesIter.hasNext()){
 			indexNode= nodesIter.next();
-			long fix = corTimeSumAvg - indexNode.getTime();
-			indexNode.setFix(fix);
+			fix = corTimeSumAvg - indexNode.getTime();
+			indexNode.setFix( (int) fix);
 		}
 	}
-	public String printWrongTime(){
-		Calendar now = getTime();
-		now.add(Calendar.SECOND, amount);
+	/*public String printWrongTime(){
+		Date now = getTime();
+		DateUtils.addMilliseconds(now, amount);
 		String time = printTime(now);
 		
 		return time;
+	}*/
+	public void fixErrorAmount(int fix){
+		setAmount(amount + fix);
 	}
-	public void fixErrorAmount(long fix){
-		int fixInt = (int) fix;
-		setAmount(amount + fixInt);
+	public void pushFix(){
+		LinkedList<Nodes> nodesList = Variables.getNodesList();
+		Iterator<Nodes> nodesIt = nodesList.iterator();
+		Nodes indexNode = null;
+		while(nodesIt.hasNext()){
+			indexNode = nodesIt.next();
+			try{
+				Registry reg = LocateRegistry.getRegistry(indexNode.getIpAddr(),
+						indexNode.getRmiPort());
+				TimeOperInt timeOper = (TimeOperInt) reg.lookup("TimeOper");
+				timeOper.fixErrorAmount(indexNode.getFix());
+				reg = null;
+				timeOper = null;
+			}catch(RemoteException e){
+				e.printStackTrace();
+			}catch(NotBoundException e){
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 leader=0
-t_error=-10 sec
+t_error=-10000
 rmiport=2021
 bootstrap=127.0.0.1
 b_port=2020

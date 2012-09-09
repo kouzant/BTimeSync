@@ -43,6 +43,12 @@ public class TimeSync implements Runnable {
 						e.printStackTrace();
 					}
 					timeOper.computeFix();
+					try{
+						TimeUnit.SECONDS.sleep(1);
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+					timeOper.pushFix();
 				}catch(RemoteException e){
 					e.printStackTrace();
 				}catch(NotBoundException e){

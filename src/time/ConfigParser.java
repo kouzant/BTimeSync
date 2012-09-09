@@ -32,15 +32,7 @@ public class ConfigParser {
 	}
 	public int timeError(){
 		String terror = properties.getProperty("t_error", "5");
-		//Parse seconds (sec) or milliseconds (mil)
-		String[] splitStr = terror.split("[ ]");
-		if(splitStr[1].equalsIgnoreCase("sec")){
-			//Seconds
-			return (Integer.parseInt(splitStr[0]) * 1000);
-		}else{
-			//Milliseconds
-			return Integer.parseInt(splitStr[0]);
-		}
+		return Integer.parseInt(terror);
 	}
 	public int rmiPort(){
 		String port = properties.getProperty("rmiport", "2080");
