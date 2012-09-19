@@ -190,4 +190,55 @@ threads, το ένα που ανά τακτά χρονικά διαστήματ�
 Εν συνεχεία υπολογίζεται το ποσό της διόρθωσης για κάθε κόμβο, είτε θετικό, είτε
 αρνητικό. Τέλος γίνεται RMI κλήση σε κάθε κόμβο, στη μέθοδο
 \emph{fixErrorAmount} με το ποσό της διόρθωσης.
+
+\section{Εγχειρίδιο Χρήσης}
+Η εφαρμογή χρειάζεται το εργαλείο \emph{ant} για να γίνει build. Επίσης
+χρειάζεται τις βιβλιοθήκες commons-lang3-3.1.jar και log4j-1.2.17.jar. Η πρώτη
+βιβλιοθήκη χρησιμοποιείται για το format της ώρας των κόμβων ενώ η δεύτερη για
+logging. Για να κάνουμε build την εφαρμογή αρκεί να εκτελέσουμε \textbf{ant}
+όπως φαίνεται στο Σχήμα \ref{ant}.
+\begin{figure}[tbh]
+\centering
+\includegraphics[scale=0.7]{photos/ant_build.png}
+\caption{ant}
+\label{ant}
+\end{figure}
+
+Αντιθέτως για να διαγράψουμε τον κατάλογο με τα compiled αρχεία, εκτελούμε 
+\textbf{ant clean} όπως φαίνεται στο Σχήμα \ref{ant_clean}
+\begin{figure}[tbh]
+\centering
+\includegraphics[scale=0.7]{photos/ant_clean.png}
+\caption{ant clean}
+\label{ant_clean}
+\end{figure}
+
+Για να τρέξουμε την εφαρμογή σε κάθε κόμβο θα πρέπει να εκτελέσουμε την
+εντολή \textbf{java -jar build/jar/BTimeSync.jar -c CONFIG\_FILE} όπου
+CONFIG\_FILE το configuration file του εκάστοτε κόμβου Στο Σχήμα
+\ref{sync_start} φαίνεται πως εκτελούμε την εφαρμογή για τέσσερις κόμβους.
+Αρχικά διακρίνεται ο λανθασμένος χρόνος ενώ μετά από δύο μόλις διορθώσεις οι
+κόμβοι έχουν συγχρονιστεί σε λεπτομέρεια δευτερολέπτου (Σχήμα \ref{sync_after}).
+Επίσης στο Σχήμα \ref{sync_start} φαίνεται το UID του τρέχοντα κόμβου μαζί με
+την διεύθυνση ip και την θύρα του RMI registry. Στο Σχήμα \ref{sync_after}
+φαίνεται και ο κόμβος που είναι επόμενος του τρέχοντα κόμβου, δηλαδή ο κόμβος με
+τον οποίο επικοινωνεί ο τρέχον κόμβος για τη διαδικασία της εκλογής νέου
+αρχηγού.
+Στις επόμενες διορθώσεις, η διαφορά είναι στα milliseconds αφού πλέον οι κόμβοι
+έχουν συγχρονιστεί μέχρι και στα δευτερόλεπτα. Όσο πιο πολλοί είναι οι κόμβοι
+στο δίκτυο τόσο περισσότερο χρόνο θα πάρει για να συγκλίνουν κάπου τα ρολόγια
+των κόμβων.
+\begin{figure}[tbh]
+\centering
+\includegraphics[scale=0.35]{photos/sync_start.png}
+\caption{Λανθασμένος Χρόνος}
+\label{sync_start}
+\end{figure}
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[scale=0.35]{photos/sync_end.png}
+\caption{Συγχρονισμένοι Κόμβοι}
+\label{sync_after}
+\end{figure}
 \end{document}
