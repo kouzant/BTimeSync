@@ -93,7 +93,7 @@ public class Main {
 			try{
 				Registry reg = LocateRegistry.getRegistry(cp.bootstrap(), cp.b_port());
 				ProceduresInt elProc = (ProceduresInt) reg.lookup("ElecProc");
-				//RMI call to boostrap node to get leader
+				//RMI call to bootstrap node to get leader
 				Variables.setCurLeader(elProc.publishLeader());
 				//Connect to leader
 				reg = LocateRegistry.getRegistry(Variables.getCurLeader().getIpAddr(),
